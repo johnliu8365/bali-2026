@@ -10,6 +10,7 @@ const filters = {
   today: {category:'全部'},
   explore: {region:'全部', category:'全部', status:'全部'}
 };
+let deferredInstallPrompt = null;
 
 function escapeHTML(value='') {
   return String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -99,7 +100,79 @@ function renderInfo() {
   const hotels = trip.wishlist.filter(p=>p.category==='住宿');
   const candidates=hotels.map(p=>`<article class="candidate-card"><h3>${categoryIcon(p.category)} ${displayName(p)}</h3><p>${escapeHTML(p.description)}</p><span class="warning">候選住宿</span>${p.website?`<div class="link-row"><a class="action-link" href="${escapeHTML(p.website)}" target="_blank" rel="noopener">查看住宿介紹</a></div>`:''}</article>`).join('');
   const packing=Object.entries(trip.packing).map(([group,items])=>`<details class="packing-group"><summary>${group} · ${items.length}</summary><ul class="check-list">${items.map(i=>`<li>${escapeHTML(i)}</li>`).join('')}</ul></details>`).join('');
-  $('#info-content').innerHTML=`<section class="info-section"><div class="info-section__heading"><h2>航班</h2></div>${flights}</section><section class="info-section"><div class="info-section__heading"><h2>住宿</h2><span>${hotels.length} 間候選</span></div>${candidates}</section><section class="info-section"><div class="info-section__heading"><h2>行前準備</h2><span>打包清單</span></div>${packing}</section><section class="info-section"><p class="source-note">資料來源：Notion「2026 峇里島 涵威活該沒玩到」。外部地圖與參考連結需要網路。</p></section>`;
+  $('#info-content').innerHTML=`<section class="info-section" id="install-info"><div class="info-section__heading"><h2>離線 App</h2></div><div class="install-info-card"><h3>加入手機主畫面</h3><p>安裝後會像一般 App 一樣開啟，已儲存的旅遊內容沒有網路也能查看。</p><button class="action-link" type="button" data-open-install>查看安裝方式</button></div></section><section class="info-section"><div class="info-section__heading"><h2>航班</h2></div>${flights}</section><section class="info-section"><div class="info-section__heading"><h2>住宿</h2><span>${hotels.length} 間候選</span></div>${candidates}</section><section class="info-section"><div class="info-section__heading"><h2>行前準備</h2><span>打包清單</span></div>${packing}</section><section class="info-section"><p class="source-note">資料來源：Notion「2026 峇里島 涵威活該沒玩到」。外部地圖與參考連結需要網路。</p></section>`;
+}
+
+function isInstalledApp() {
+  return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+}
+function isIosDevice() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+function isSafariBrowser() {
+  return /safari/i.test(navigator.userAgent) && !/(crios|fxios|edgios|opios)/i.test(navigator.userAgent);
+}
+function installHelp() {
+  if (isIosDevice()) {
+    return isSafariBrowser()
+      ? {copy:'iPhone 不會自動跳出安裝視窗，請從 Safari 的分享選單加入。',steps:['點 Safari 工具列的「分享」按鈕。','往下滑並選擇「加入主畫面」。','開啟「以 Web App 打開」，再點右上角「新增」。']}
+      : {copy:'iPhone 需要使用 Safari 才能安裝這個離線 App。',steps:['複製目前網址並改用 Safari 開啟。','點 Safari 的「分享」按鈕。','選擇「加入主畫面」，再點「新增」。']};
+  }
+  return {copy:'如果瀏覽器沒有顯示安裝視窗，也可以從瀏覽器選單加入。',steps:['開啟瀏覽器選單。','選擇「安裝應用程式」或「加到主畫面」。','確認安裝，之後從手機主畫面開啟。']};
+}
+function openInstallHelp() {
+  if (deferredInstallPrompt) {
+    const prompt = deferredInstallPrompt;
+    deferredInstallPrompt = null;
+    prompt.prompt();
+    prompt.userChoice.then(({outcome}) => {
+      if (outcome === 'accepted') $('#install-card').hidden = true;
+    });
+    return;
+  }
+  const help = installHelp();
+  $('#install-dialog-copy').textContent = help.copy;
+  $('#install-steps').innerHTML = help.steps.map(step=>`<li>${escapeHTML(step)}</li>`).join('');
+  $('#install-dialog').showModal();
+}
+function showInstallCard(mode) {
+  let dismissed = false;
+  try { dismissed = sessionStorage.getItem('install-card-dismissed') === 'yes'; } catch (_) {}
+  if (isInstalledApp() || dismissed) return;
+  $('#install-card-copy').textContent = mode === 'ios'
+    ? 'iPhone 請用 Safari 加入主畫面，之後可離線開啟。'
+    : '加入手機主畫面，旅途中沒有網路也能查看。';
+  $('#install-button').textContent = mode === 'native' ? '安裝 App' : '查看加入方式';
+  $('#install-card').hidden = false;
+}
+function setupInstallExperience() {
+  if (isInstalledApp()) {
+    $('#install-card').hidden = true;
+    $('#install-info')?.remove();
+    return;
+  }
+  if (isIosDevice()) showInstallCard('ios');
+  else if (/android/i.test(navigator.userAgent)) setTimeout(()=>showInstallCard(deferredInstallPrompt ? 'native' : 'manual'),1200);
+  window.addEventListener('beforeinstallprompt', event => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    showInstallCard('native');
+  });
+  window.addEventListener('appinstalled', () => {
+    deferredInstallPrompt = null;
+    $('#install-card').hidden = true;
+    $('#install-info')?.remove();
+  });
+  $('#install-button').addEventListener('click', openInstallHelp);
+  $('#install-dismiss').addEventListener('click', () => {
+    $('#install-card').hidden = true;
+    try { sessionStorage.setItem('install-card-dismissed','yes'); } catch (_) {}
+  });
+  document.addEventListener('click', event => {
+    if (event.target.closest('[data-open-install]')) openInstallHelp();
+  });
+  $('#install-dialog-close').addEventListener('click',()=>$('#install-dialog').close());
+  $('#install-dialog').addEventListener('click',event=>{if(event.target===$('#install-dialog')) $('#install-dialog').close();});
 }
 function openDetail(event, day) {
   $('#detail-content').innerHTML=`<span class="detail-icon" aria-hidden="true">${categoryIcon(event.category)}</span><p class="category detail-category">${escapeHTML(event.category)}</p><h2>${displayName(event)}</h2><p class="detail-subtitle">${escapeHTML(event.subtitle||day.city)}</p><div class="detail-grid"><div class="detail-stat"><span>日期</span><strong>${day.label}</strong></div><div class="detail-stat"><span>時間</span><strong>${escapeHTML(event.time)}${event.end?` — ${event.end}`:''}</strong></div></div><p class="detail-copy">${escapeHTML(event.description)}</p>${event.detail?`<p class="detail-copy">${escapeHTML(event.detail)}</p>`:''}${event.warning?`<span class="warning">${escapeHTML(event.warning)}</span>`:''}<div class="detail-actions">${actions(event)}</div>`;
@@ -115,7 +188,7 @@ $('.sheet-close').addEventListener('click',()=>$('#detail-dialog').close());
 $('#detail-dialog').addEventListener('click',e=>{if(e.target===$('#detail-dialog')) $('#detail-dialog').close();});
 window.addEventListener('online',()=>$('#offline-state').textContent='已連線');
 window.addEventListener('offline',()=>$('#offline-state').textContent='目前離線');
-renderToday();renderTrip();renderPlaces();renderInfo();
+renderToday();renderTrip();renderPlaces();renderInfo();setupInstallExperience();
 if('serviceWorker' in navigator) window.addEventListener('load',()=>{
   const hadController = Boolean(navigator.serviceWorker.controller);
   let reloading = false;

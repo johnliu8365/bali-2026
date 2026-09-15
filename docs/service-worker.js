@@ -1,5 +1,5 @@
-const CACHE = 'bali-2026-public-v5';
-const ASSETS = ['./','index.html','app.css','trip-data.js','app.js','manifest.json','assets/cover.jpg'];
+const CACHE = 'bali-2026-public-v6';
+const ASSETS = ['./','index.html','app.css','trip-data.js','app.js','manifest.json','assets/cover.jpg','assets/app-icon.svg','assets/app-icon-180.png','assets/app-icon-192.png','assets/app-icon-512.png'];
 const ASSET_URLS = ASSETS.map(path => new URL(path, self.registration.scope).href);
 const isPreviousCache = key => key !== CACHE && (key.startsWith('bali-2026-') || key.startsWith('island-east-'));
 

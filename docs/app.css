@@ -61,3 +61,22 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offse
 .today-filters .filter-row button{flex-shrink:0}
 #today-content .timeline{margin-top:20px}
 @media(max-width:350px){.cover__top,.cover__copy{left:18px;right:18px}.cover h1{font-size:1.4rem}.trip-status{gap:14px}}
+
+/* Installable PWA invitation and cross-platform instructions. */
+.install-card[hidden]{display:none}
+.install-card{position:relative;margin:18px 20px 0;padding:16px;display:grid;grid-template-columns:54px minmax(0,1fr);gap:12px 14px;align-items:center;background:var(--green);color:#fff;border-radius:20px;box-shadow:var(--shadow)}
+.install-card img,.install-sheet__icon{border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.install-card__copy{min-width:0;padding-right:18px}
+.install-card__copy strong{display:block;font-size:1rem;line-height:1.4}
+.install-card__copy p{margin:4px 0 0;color:rgba(255,255,255,.72);font-size:.8rem;line-height:1.5}
+.install-card__button{grid-column:1/-1;min-height:44px;border:0;border-radius:12px;background:var(--lime);color:var(--ink);font-weight:800;cursor:pointer}
+.install-card__dismiss{position:absolute;right:6px;top:5px;width:36px;height:36px;border:0;background:transparent;color:rgba(255,255,255,.72);font-size:1.25rem;cursor:pointer}
+.install-sheet__icon{display:block;margin-bottom:16px}
+.install-sheet .detail-copy{margin-bottom:14px}
+.install-steps{margin:0;padding:0;list-style:none;counter-reset:install-step}
+.install-steps li{counter-increment:install-step;position:relative;margin-bottom:10px;padding:13px 13px 13px 48px;background:#fff;border-radius:14px;font-size:.92rem;line-height:1.55}
+.install-steps li:before{content:counter(install-step);position:absolute;left:13px;top:12px;display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:var(--green);color:#fff;font-size:.75rem;font-weight:800}
+.install-info-card{padding:17px;background:#e5e9df;border-radius:18px}
+.install-info-card h3{margin:0 0 6px;font-size:1rem}
+.install-info-card p{margin:0 0 13px;color:var(--muted);font-size:.85rem;line-height:1.6}
+.install-info-card button{border:0;cursor:pointer}
