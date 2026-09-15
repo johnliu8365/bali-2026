@@ -81,3 +81,10 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offse
 /* Keep Explore filters on one horizontally scrollable row per group. */
 .explore-filters .filter-row{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;padding:4px 2px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
 .explore-filters .filter-row button{flex-shrink:0}
+
+/* Warm friend-group asides: visually distinct from factual itinerary data. */
+.friend-nudge{margin-top:10px!important;padding-top:9px;border-top:1px dashed rgba(23,61,43,.22);color:#496055!important;font-size:.82rem!important;font-style:italic;line-height:1.55}
+.friend-nudge--heading{max-width:38rem;margin-top:14px!important;padding:11px 13px;border:0;border-radius:12px;background:#e6eadb;color:var(--green)!important;font-style:normal}
+.friend-nudge--panel{padding:13px 15px;border:0;border-radius:14px;background:#e6eadb;color:var(--green)!important;font-style:normal}
+.friend-nudge--detail{padding:13px 15px;border:0;border-radius:14px;background:#e6eadb;color:var(--green)!important;font-style:normal;font-size:.9rem!important}
+.day-card p{max-width:85%;line-height:1.55}
