@@ -77,3 +77,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offse
 .install-info-card p{margin:0 0 13px;color:var(--muted);font-size:.85rem;line-height:1.6}
 .install-info-card button{border:0;background:#17324d;cursor:pointer}
 .offline-pill{background:transparent;color:inherit;cursor:pointer}
+
+/* Keep Explore filters on one horizontally scrollable row per group. */
+.explore-filters .filter-row{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;padding:4px 2px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.explore-filters .filter-row button{flex-shrink:0}
