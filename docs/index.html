@@ -26,16 +26,20 @@
       <section class="section-block" id="today-content"></section>
     </section>
     <section class="view page-view" data-view="trip" aria-labelledby="trip-title">
-      <header class="page-header"><span class="eyebrow">9 月 26 日 — 10 月 4 日</span><h1 id="trip-title">九日旅程</h1><p>每日預計停留地區，詳細安排待定。</p></header>
+      <header class="page-header"><span class="eyebrow">9 月 26 日 — 10 月 4 日</span><h1 id="trip-title">九日旅程</h1><p>主行程、景點間交通、預約提醒與每日備案。</p></header>
       <div class="day-list" id="day-list"></div>
     </section>
     <section class="view page-view" data-view="explore" aria-labelledby="explore-title">
-      <header class="page-header"><span class="eyebrow">探索</span><h1 id="explore-title">沿途收藏</h1><p>依地區與分類查看行程、想去的地方。</p></header>
+      <header class="page-header"><span class="eyebrow">探索</span><h1 id="explore-title">全部安排</h1><p>依地區、分類與安排狀態查看主行程、備案及未排日景點。</p></header>
       <div class="explore-filters" id="place-filters" aria-label="地區與分類篩選"></div>
       <div class="place-list" id="place-list"></div>
     </section>
+    <section class="view page-view" data-view="prepare" aria-labelledby="prepare-title">
+      <header class="page-header page-header--dark"><span class="eyebrow">出發前</span><h1 id="prepare-title">行前準備</h1><p>全團準備進度與我的打包清單。</p></header>
+      <div class="info-content" id="prepare-content"></div>
+    </section>
     <section class="view page-view" data-view="info" aria-labelledby="info-title">
-      <header class="page-header page-header--dark"><span class="eyebrow">隨身資料</span><h1 id="info-title">重要資訊</h1><p>航班、住宿與出發前清單。</p></header>
+      <header class="page-header page-header--dark"><span class="eyebrow">隨身資料</span><h1 id="info-title">重要資訊</h1><p>共用地圖、航班、住宿與離線資訊。</p></header>
       <div class="info-content" id="info-content"></div>
     </section>
   </main>
@@ -52,6 +56,7 @@
     <button data-target="today" class="is-active"><span aria-hidden="true">◉</span>今日</button>
     <button data-target="trip"><span aria-hidden="true">▤</span>旅程</button>
     <button data-target="explore"><span aria-hidden="true">◇</span>探索</button>
+    <button data-target="prepare"><span aria-hidden="true">✓</span>準備</button>
     <button data-target="info"><span aria-hidden="true">≡</span>資訊</button>
   </nav>
   <dialog class="detail-sheet" id="detail-dialog"><div class="sheet-handle"></div><button class="sheet-close" aria-label="關閉">×</button><div id="detail-content"></div></dialog>
