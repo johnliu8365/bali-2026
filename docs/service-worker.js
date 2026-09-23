@@ -1,4 +1,4 @@
-const CACHE = 'bali-2026-public-v24';
+const CACHE = 'bali-2026-public-v25';
 const ASSETS = ['./','index.html','app.css','trip-data.js','app.js','manifest.json','assets/cover.jpg','assets/app-icon-180.png','assets/app-icon-192.png','assets/app-icon-512.png','assets/stay-ubud.jpg','assets/stay-seminyak.jpg','assets/stay-surabaya.jpg','assets/stay-singapore.jpg','assets/mamasan-bali.webp','assets/day-01-bali-arrival.jpg','assets/day-02-ubud.jpg','assets/day-03-tanah-lot.jpg','assets/day-04-uluwatu.jpg','assets/day-05-surabaya-arrival.jpg','assets/day-06-surabaya-old-city.jpg','assets/day-07-bromo.jpg','assets/day-08-singapore.jpg','assets/day-09-changi.jpg'];
 const ASSET_URLS = ASSETS.map(path => new URL(path, self.registration.scope).href);
 const isPreviousCache = key => key !== CACHE && (key.startsWith('bali-2026-') || key.startsWith('island-east-'));
